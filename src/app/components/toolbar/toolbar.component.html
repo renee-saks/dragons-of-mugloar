@@ -1,0 +1,52 @@
+<mat-toolbar>
+  <!-- Menu Button -->
+  <button
+    mat-icon-button
+    class="menu-button"
+    type="button"
+    [matMenuTriggerFor]="menu"
+  >
+    <mat-icon>more_vert</mat-icon>
+  </button>
+
+  <!-- Menu Items -->
+  <mat-menu #menu="matMenu">
+    @for (action of toolbarActions; track action.icon) {
+      <button
+        type="button"
+        mat-menu-item
+        [disabled]="action.isDisabled()"
+        (click)="action.onClick()"
+      >
+        <mat-icon>{{ action.getIcon() }}</mat-icon>
+        {{ action.getLabel() }}
+      </button>
+    }
+  </mat-menu>
+
+  <!-- Toolbar Buttons -->
+  @for (action of toolbarActions; track action.icon) {
+    <button
+      mat-icon-button
+      type="button"
+      class="toolbar-button"
+      [disabled]="action.isDisabled()"
+      [matTooltip]="action.getLabel()"
+      (click)="action.onClick()"
+    >
+      <mat-icon>{{ action.getIcon() }}</mat-icon>
+    </button>
+  }
+
+  <div class="flex-spacer"></div>
+
+  <!-- Game Stats -->
+  <mat-chip-set>
+    @for (stat of gameStats; track stat.icon) {
+      <mat-chip>
+        <mat-icon leadingIcon>{{ stat.icon }}</mat-icon>
+        {{ stat.value() }}
+      </mat-chip>
+    }
+  </mat-chip-set>
+</mat-toolbar>

@@ -1,0 +1,45 @@
+<mat-card class="task-card" appearance="raised">
+  <mat-card-header class="task-header">
+    <div mat-card-avatar class="task-avatar"></div>
+
+    <mat-card-title class="task-title">
+      @for (stat of taskStats; track stat.icon) {
+        <div [class]="stat.class">
+          <mat-icon>{{ stat.icon }}</mat-icon>
+          <span>{{ stat.getValue() }}</span>
+        </div>
+      }
+    </mat-card-title>
+
+    <mat-card-subtitle class="task-probability">
+      {{ task().probability }}
+    </mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-progress-bar
+    class="task-probability"
+    mode="determinate"
+    [value]="probability()"
+  />
+
+  <mat-card-content class="task-content">
+    <div class="task-impact">
+      @for (impact of impacts; track impact.type) {
+        @if (impact.isVisible()) {
+          <div class="task-impact-item">
+            <mat-icon [class]="impact.iconClass">{{ impact.icon }}</mat-icon>
+            <span>{{ impact.text }}</span>
+          </div>
+        }
+      }
+    </div>
+
+    <div class="task-message">
+      <p>{{ task().message }}.</p>
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions class="task-actions">
+    <button mat-button type="button" (click)="takeTask()">Take task</button>
+  </mat-card-actions>
+</mat-card>

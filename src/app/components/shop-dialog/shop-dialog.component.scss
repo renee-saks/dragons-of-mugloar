@@ -1,0 +1,41 @@
+.dialog-content {
+  display: flex;
+  flex-direction: column;
+  max-height: unset;
+}
+
+.balance {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  gap: 2px;
+}
+
+.mat-column-name {
+  text-align: left;
+}
+
+.mat-column-cost {
+  text-align: center;
+}
+
+.mat-column-lives {
+  text-align: center;
+}
+
+.mat-column-levels {
+  text-align: center;
+}
+
+.mat-column-quantity {
+  font-weight: bold;
+  text-align: center;
+}
+
+.mat-column-actions {
+  text-align: center;
+}
+
+tr.mat-mdc-footer-row td {
+  font-weight: bold;
+}

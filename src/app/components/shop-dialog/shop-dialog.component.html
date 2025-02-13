@@ -1,0 +1,54 @@
+<h2 mat-dialog-title>Shop</h2>
+
+<mat-dialog-content class="dialog-content mat-typography">
+  <table class="shop-table" mat-table [dataSource]="App.Shop.entities()">
+    @for (col of columns; track col.def) {
+      <ng-container [matColumnDef]="col.def">
+        <th *matHeaderCellDef mat-header-cell>
+          <mat-icon>{{ col.icon }}</mat-icon>
+        </th>
+        <td *matCellDef="let element" mat-cell>
+          @if (col.def === "actions") {
+            <button
+              mat-icon-button
+              type="button"
+              [disabled]="!isAffordable(element.id)"
+              (click)="addItem(element.id)"
+            >
+              <mat-icon>add</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              type="button"
+              [disabled]="!getItemQuantity(element.id)"
+              (click)="removeItem(element.id)"
+            >
+              <mat-icon>remove</mat-icon>
+            </button>
+          } @else {
+            {{ col.getCellValue(element) }}
+          }
+        </td>
+        <td *matFooterCellDef mat-footer-cell>
+          {{ col.getFooterValue() }}
+        </td>
+      </ng-container>
+    }
+
+    <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+    <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+    <tr *matFooterRowDef="displayedColumns" mat-footer-row></tr>
+  </table>
+
+  <div class="balance">
+    <mat-icon>monetization_on</mat-icon>
+    <h3>{{ balance() }}</h3>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" (click)="checkout()">Purchase</button>
+  <button mat-button mat-dialog-close cdkFocusInitial type="button">
+    Close
+  </button>
+</mat-dialog-actions>

@@ -1,0 +1,61 @@
+<h2 mat-dialog-title>History</h2>
+
+<mat-dialog-content class="dialog-content mat-typography">
+  <mat-tab-group animationDuration="0ms">
+    <mat-tab label="Tasks">
+      <table
+        class="history-table"
+        mat-table
+        [dataSource]="TaskHistory.entities()"
+      >
+        @for (col of taskColumns; track col.def) {
+          <ng-container [matColumnDef]="col.def">
+            <th *matHeaderCellDef mat-header-cell>
+              <mat-icon>{{ col.icon }}</mat-icon>
+            </th>
+            <td *matCellDef="let element" mat-cell>
+              @if (col.def === "task") {
+                <span [matTooltip]="col.getCellValue(element)">
+                  {{ col.getCellValue(element) }}
+                </span>
+              } @else {
+                {{ col.getCellValue(element) }}
+              }
+            </td>
+          </ng-container>
+        }
+
+        <tr *matHeaderRowDef="displayedTaskColumns" mat-header-row></tr>
+        <tr *matRowDef="let row; columns: displayedTaskColumns" mat-row></tr>
+      </table>
+    </mat-tab>
+
+    <mat-tab label="Shop">
+      <table
+        class="history-table"
+        mat-table
+        [dataSource]="ShopHistory.entities()"
+      >
+        @for (col of shopColumns; track col.def) {
+          <ng-container [matColumnDef]="col.def">
+            <th *matHeaderCellDef mat-header-cell>
+              <mat-icon>{{ col.icon }}</mat-icon>
+            </th>
+            <td *matCellDef="let element" mat-cell>
+              {{ col.getCellValue(element) }}
+            </td>
+          </ng-container>
+        }
+
+        <tr *matHeaderRowDef="displayedShopColumns" mat-header-row></tr>
+        <tr *matRowDef="let row; columns: displayedShopColumns" mat-row></tr>
+      </table>
+    </mat-tab>
+  </mat-tab-group>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close cdkFocusInitial type="button">
+    Close
+  </button>
+</mat-dialog-actions>

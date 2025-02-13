@@ -1,0 +1,37 @@
+.dialog-content {
+  display: flex;
+  flex-direction: column;
+  max-height: unset;
+}
+
+.history-table {
+  width: 100%;
+}
+
+.mat-column-task,
+.mat-column-name {
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mat-column-name,
+.mat-column-reward,
+.mat-column-probability,
+.mat-column-success,
+.mat-column-gold,
+.mat-column-score,
+.mat-column-lives,
+.mat-column-turn,
+.mat-column-level {
+  text-align: center;
+}
+
+tr.mat-mdc-row:nth-child(even) {
+  background: rgb(0 0 0 / 5%);
+}
+
+tr.mat-mdc-row:hover {
+  background: rgb(0 0 0 / 10%);
+}

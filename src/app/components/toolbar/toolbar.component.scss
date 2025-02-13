@@ -1,0 +1,25 @@
+mat-toolbar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  gap: 8px;
+  z-index: 2;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+mat-chip {
+  pointer-events: none;
+}
+
+@media (width >= 801px) {
+  .menu-button {
+    display: none;
+  }
+}
+
+@media (width <= 800px) {
+  .toolbar-button {
+    display: none;
+  }
+}
