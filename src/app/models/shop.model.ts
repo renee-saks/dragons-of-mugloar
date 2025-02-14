@@ -18,6 +18,7 @@ export interface ShopPurchase {
 
 export interface ShopHistory {
   id: number;
+  timestamp: number;
   item: ShopItem;
   response: ShopPurchase;
 }

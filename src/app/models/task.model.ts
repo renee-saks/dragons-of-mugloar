@@ -23,6 +23,7 @@ export interface TaskResolution {
 
 export interface TaskHistory {
   id: number;
+  timestamp: number;
   task: Task;
   response: TaskResolution;
 }

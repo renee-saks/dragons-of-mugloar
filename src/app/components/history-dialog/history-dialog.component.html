@@ -10,7 +10,7 @@
       >
         @for (col of taskColumns; track col.def) {
           <ng-container [matColumnDef]="col.def">
-            <th *matHeaderCellDef mat-header-cell>
+            <th *matHeaderCellDef mat-header-cell [matTooltip]="col.def">
               <mat-icon>{{ col.icon }}</mat-icon>
             </th>
             <td *matCellDef="let element" mat-cell>
@@ -38,7 +38,7 @@
       >
         @for (col of shopColumns; track col.def) {
           <ng-container [matColumnDef]="col.def">
-            <th *matHeaderCellDef mat-header-cell>
+            <th *matHeaderCellDef mat-header-cell [matTooltip]="col.def">
               <mat-icon>{{ col.icon }}</mat-icon>
             </th>
             <td *matCellDef="let element" mat-cell>

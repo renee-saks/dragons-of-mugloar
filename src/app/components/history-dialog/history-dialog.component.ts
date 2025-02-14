@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -27,9 +27,9 @@ import { ShopHistoryStore, TaskHistoryStore } from '../../stores';
 export class HistoryDialogComponent {
   readonly TaskHistory = inject(TaskHistoryStore);
   readonly ShopHistory = inject(ShopHistoryStore);
-  readonly dialogRef = inject(MatDialogRef<HistoryDialogComponent>);
 
   readonly displayedTaskColumns: string[] = [
+    'timestamp',
     'task',
     'probability',
     'success',
@@ -40,6 +40,7 @@ export class HistoryDialogComponent {
   ];
 
   readonly displayedShopColumns: string[] = [
+    'timestamp',
     'name',
     'success',
     'gold',
@@ -49,6 +50,12 @@ export class HistoryDialogComponent {
   ];
 
   readonly taskColumns: TaskHistoryColumn[] = [
+    {
+      def: 'timestamp',
+      icon: 'lock_clock',
+      getCellValue: ({ timestamp }) =>
+        new Date(timestamp).toLocaleTimeString('et-EE'),
+    },
     {
       def: 'task',
       icon: 'task',
@@ -88,6 +95,12 @@ export class HistoryDialogComponent {
   ];
 
   readonly shopColumns: ShopHistoryColumn[] = [
+    {
+      def: 'timestamp',
+      icon: 'lock_clock',
+      getCellValue: ({ timestamp }) =>
+        new Date(timestamp).toLocaleTimeString('et-EE'),
+    },
     {
       def: 'name',
       icon: 'shopping_cart',

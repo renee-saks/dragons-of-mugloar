@@ -16,13 +16,13 @@ export const TaskHistoryStore = signalStore(
   withEntities<TaskHistory>(),
   withReset(),
   withComputed(({ ids }) => ({
-    nextId: computed(() => ids().length + 1),
+    _meta: computed(() => ({ id: ids().length + 1, timestamp: Date.now() })),
   })),
   withMethods((TaskHistory) => ({
     add(task: Task, response: TaskResolution) {
       patchState(
         TaskHistory,
-        addEntity({ id: TaskHistory.nextId(), task, response }),
+        addEntity({ ...TaskHistory._meta(), task, response }),
       );
     },
   })),

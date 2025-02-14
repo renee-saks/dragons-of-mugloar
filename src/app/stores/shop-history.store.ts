@@ -16,13 +16,13 @@ export const ShopHistoryStore = signalStore(
   withEntities<ShopHistory>(),
   withReset(),
   withComputed(({ ids }) => ({
-    nextId: computed(() => ids().length + 1),
+    _meta: computed(() => ({ id: ids().length + 1, timestamp: Date.now() })),
   })),
   withMethods((ShopHistory) => ({
     add(item: ShopItem, response: ShopPurchase) {
       patchState(
         ShopHistory,
-        addEntity({ id: ShopHistory.nextId(), item, response }),
+        addEntity({ ...ShopHistory._meta(), item, response }),
       );
     },
   })),
