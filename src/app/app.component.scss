@@ -1,5 +1,10 @@
 .main-content {
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   padding-top: 64px;
+  height: calc(100% - 64px);
 }
 
 .task-grid {

@@ -28,6 +28,7 @@ app-toolbar {
     (
       container-background-color: var(--mat-sys-primary-container),
       container-text-color: var(--mat-sys-on-primary-container),
+      mobile-height: 64px,
     )
   );
   @include mat.chips-overrides(

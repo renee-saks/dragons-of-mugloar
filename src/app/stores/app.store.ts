@@ -15,7 +15,7 @@ import {
   withState,
 } from '@ngrx/signals';
 
-import { imagePaths, initialAppState, taskProbabilities } from '../constants';
+import { initialAppState, taskProbabilities } from '../constants';
 import { ColorMode, ShopItemId } from '../models';
 import { GameStore } from './game.store';
 import { ReputationStore } from './reputation.store';
@@ -153,23 +153,10 @@ export const AppStore = signalStore(
       }
     },
   })),
-  withHooks(
-    ({
-      colorMode,
-      toggleColorMode,
-      _renderer,
-      _document: _documentElement,
-    }) => ({
-      onInit() {
-        // Choose a random background image
-        const images = Object.values(imagePaths.backgrounds);
-        const randomImage = images[Math.floor(Math.random() * images.length)];
-        const url = `url(${randomImage ?? imagePaths.backgrounds[0]})`;
-        _renderer.setStyle(_documentElement.body, 'background-image', url);
-
-        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-        toggleColorMode(colorMode() ?? (mediaQuery.matches ? 'dark' : 'light'));
-      },
-    }),
-  ),
+  withHooks(({ colorMode, toggleColorMode }) => ({
+    onInit() {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      toggleColorMode(colorMode() ?? (mediaQuery.matches ? 'dark' : 'light'));
+    },
+  })),
 );
