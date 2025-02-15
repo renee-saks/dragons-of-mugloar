@@ -1,11 +1,20 @@
 <app-toolbar />
 
-<div class="main-content">
-  @if (App.isGameActive()) {
+<div class="toolbar-spacer"></div>
+
+@if (App.isGameActive()) {
+  <div class="main-content">
     <div class="task-grid">
       @for (task of App.Task.entities(); track task.adId) {
         <app-task [task]="task" (taskTaken)="App.solveTask($event)" />
       }
     </div>
-  }
-</div>
+  </div>
+} @else {
+  <!-- eslint-disable @angular-eslint/template/no-inline-styles -->
+  <div
+    class="game-image"
+    [style.background-image]="App.randomGameImage()"
+  ></div>
+  <!-- eslint-enable -->
+}

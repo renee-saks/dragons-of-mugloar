@@ -16,5 +16,6 @@
         "no-empty-source": null
       }
     }
-  ]
+  ],
+  "ignoreFiles": ["dist/**"]
 }

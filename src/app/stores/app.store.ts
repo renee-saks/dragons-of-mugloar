@@ -15,7 +15,7 @@ import {
   withState,
 } from '@ngrx/signals';
 
-import { initialAppState, taskProbabilities } from '../constants';
+import { imagePaths, initialAppState, taskProbabilities } from '../constants';
 import { ColorMode, ShopItemId } from '../models';
 import { GameStore } from './game.store';
 import { ReputationStore } from './reputation.store';
@@ -44,6 +44,11 @@ export const AppStore = signalStore(
     _renderer: inject(RendererFactory2).createRenderer(null, null),
   })),
   withComputed((App) => ({
+    randomGameImage: computed(() => {
+      const images = Object.values(imagePaths.backgrounds);
+      const randomImage = images[Math.floor(Math.random() * images.length)];
+      return `url(${randomImage ?? imagePaths.backgrounds[0]})`;
+    }),
     isDarkMode: computed(() => App.colorMode() === 'dark'),
     isGameActive: computed(
       () =>
