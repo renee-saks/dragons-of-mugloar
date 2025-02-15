@@ -33,6 +33,8 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskComponent {
+  readonly LOGO_PATH = 'url(./logo.webp)';
+
   readonly task = input.required<Task>();
   readonly taskTaken = output<string>();
 

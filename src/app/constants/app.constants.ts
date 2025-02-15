@@ -15,3 +15,8 @@ export const initialAppState: App = {
   colorMode: null,
   isAutoplayActive: false,
 };
+
+export const imagePaths = {
+  logo: './logo.webp',
+  backgrounds: ['./bg-1.webp', './bg-2.webp', './bg-3.webp'],
+} as const;

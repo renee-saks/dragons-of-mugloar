@@ -1,6 +1,12 @@
 <mat-card class="task-card" appearance="raised">
   <mat-card-header class="task-header">
-    <div mat-card-avatar class="task-avatar"></div>
+    <!-- eslint-disable @angular-eslint/template/no-inline-styles -->
+    <div
+      mat-card-avatar
+      class="task-avatar"
+      [style.background-image]="LOGO_PATH"
+    ></div>
+    <!-- eslint-enable -->
 
     <mat-card-title class="task-title">
       @for (stat of taskStats; track stat.icon) {
