@@ -12,7 +12,6 @@ export const apiRoutes = {
 };
 
 export const initialAppState: App = {
-  isAutoplay: false,
-  isGameActive: false,
   colorMode: null,
+  isAutoplayActive: false,
 };

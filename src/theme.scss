@@ -70,11 +70,3 @@ app-toolbar {
     )
   );
 }
-
-.info-container {
-  @include mat.card-overrides(
-    (
-      elevated-container-color: var(--mat-sys-primary-container),
-    )
-  );
-}

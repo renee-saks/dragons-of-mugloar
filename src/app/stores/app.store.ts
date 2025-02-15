@@ -28,11 +28,11 @@ export const AppStore = signalStore(
   { providedIn: 'root' },
   withDevtools('app'),
   withState(initialAppState),
-  withReset(),
   withStorageSync({
     key: 'app',
     select: ({ colorMode }) => ({ colorMode }),
   }),
+  withReset(),
   withProps(() => ({
     Game: inject(GameStore),
     Reputation: inject(ReputationStore),
@@ -45,6 +45,18 @@ export const AppStore = signalStore(
   })),
   withComputed((App) => ({
     isDarkMode: computed(() => App.colorMode() === 'dark'),
+    isGameActive: computed(
+      () =>
+        !!App.Game.gameId() &&
+        !!App.Game.lives() &&
+        !!App.Task.entities().length &&
+        !!App.Shop.entities().length,
+    ),
+    isHistoryAvailable: computed(
+      () =>
+        !!App.TaskHistory.entities().length ||
+        !!App.ShopHistory.entities().length,
+    ),
     _autoplayShopItems: computed(() => {
       const potId: ShopItemId = 'hpot';
       const csId: ShopItemId = 'cs';
@@ -69,35 +81,38 @@ export const AppStore = signalStore(
 
       return [];
     }),
-    _autoplayTask: computed(() =>
-      App.Task.entities().reduce((previous, current) => {
+    _autoplayTask: computed(() => {
+      const tasks = App.Task.entities();
+
+      if (!tasks.length) {
+        return null;
+      }
+
+      return tasks.reduce((previous, current) => {
         const currentProbability = taskProbabilities[current.probability];
         const previousProbability = taskProbabilities[previous.probability];
         const currentRatio = currentProbability * current.reward;
         const previousRatio = previousProbability * previous.reward;
 
         return previousRatio < currentRatio ? current : previous;
-      }),
-    ),
+      });
+    }),
   })),
   withMethods((App) => ({
     toggleColorMode(colorMode?: ColorMode) {
       colorMode = colorMode ?? (App.colorMode() === 'dark' ? 'light' : 'dark');
-      App._renderer.setStyle(
-        App._document.documentElement,
-        'color-scheme',
-        colorMode,
-      );
+      const documentElement = App._document.documentElement;
+
+      App._renderer.setStyle(documentElement, 'color-scheme', colorMode);
       patchState(App, { colorMode });
     },
     async startGame() {
       App.Game.resetState();
+      App.Task.resetState();
       App.Reputation.resetState();
       App.ShopHistory.resetState();
       App.TaskHistory.resetState();
-      App.Task.resetState();
 
-      patchState(App, { isGameActive: true });
       await App.Game.start();
       await App.Task.fetch();
       await App.Shop.fetch();
@@ -108,7 +123,7 @@ export const AppStore = signalStore(
       if (App.Game.lives()) {
         await App.Task.fetch();
       } else {
-        patchState(App, { isGameActive: false, isAutoplay: false });
+        App.resetState();
       }
     },
     async investigateReputation() {
@@ -120,17 +135,20 @@ export const AppStore = signalStore(
       await App.Task.fetch();
     },
     async toggleAutoplay() {
-      if (App.isAutoplay()) {
-        patchState(App, { isAutoplay: false });
+      if (App.isAutoplayActive()) {
+        patchState(App, { isAutoplayActive: false });
       } else {
-        patchState(App, { isAutoplay: true });
+        patchState(App, { isAutoplayActive: true });
 
-        while (App.isAutoplay() && App.isGameActive()) {
-          if (App._autoplayShopItems().length) {
-            await this.purchaseShopItems(App._autoplayShopItems());
+        while (App.isGameActive() && App.isAutoplayActive()) {
+          await this.purchaseShopItems(App._autoplayShopItems());
+
+          const task = App._autoplayTask();
+          if (task) {
+            await this.solveTask(task.adId);
+          } else {
+            break;
           }
-
-          await this.solveTask(App._autoplayTask().adId);
         }
       }
     },

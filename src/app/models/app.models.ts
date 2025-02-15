@@ -1,9 +1,8 @@
 export type ColorMode = 'light' | 'dark';
 
 export interface App {
-  isAutoplay: boolean;
-  isGameActive: boolean;
   colorMode: ColorMode | null;
+  isAutoplayActive: boolean;
 }
 
 export interface ToolbarAction {
@@ -12,7 +11,6 @@ export interface ToolbarAction {
   getLabel: () => string;
   onClick: () => void;
   isDisabled: () => boolean;
-  menuOnly?: boolean;
 }
 
 export interface GameStat {

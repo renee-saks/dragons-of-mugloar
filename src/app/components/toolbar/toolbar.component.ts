@@ -38,26 +38,7 @@ export class ToolbarComponent {
       getLabel: () => (this.App.isGameActive() ? 'Restart Game' : 'Start Game'),
       getIcon: () => (this.App.isGameActive() ? 'refresh' : 'play_arrow'),
       onClick: () => void this.App.startGame(),
-      isDisabled: () => this.App.isAutoplay(),
-    },
-    {
-      icon: 'shopping_cart',
-      getLabel: () => 'Open Shop',
-      getIcon: () => 'shopping_cart',
-      onClick: () => {
-        this.dialog.open(ShopDialogComponent, shopDialogConfig);
-      },
-      isDisabled: () => !this.App.isGameActive() || this.App.isAutoplay(),
-    },
-    {
-      icon: 'star',
-      getLabel: () => 'Investigate Reputation',
-      getIcon: () => 'star',
-      onClick: () => void this.App.investigateReputation(),
-      isDisabled: () =>
-        !this.App.isGameActive() ||
-        this.App.isAutoplay() ||
-        !this.App.Game.gameId(),
+      isDisabled: () => this.App.isAutoplayActive(),
     },
     {
       icon: 'history',
@@ -66,15 +47,32 @@ export class ToolbarComponent {
       onClick: () => {
         this.dialog.open(HistoryDialogComponent, historyDialogConfig);
       },
-      isDisabled: () => !this.App.Task.entities().length,
+      isDisabled: () =>
+        !this.App.isGameActive() && !this.App.isHistoryAvailable(),
+    },
+    {
+      icon: 'shopping_cart',
+      getLabel: () => 'Open Shop',
+      getIcon: () => 'shopping_cart',
+      onClick: () => {
+        this.dialog.open(ShopDialogComponent, shopDialogConfig);
+      },
+      isDisabled: () => !this.App.isGameActive() || this.App.isAutoplayActive(),
+    },
+    {
+      icon: 'star',
+      getLabel: () => 'Investigate Reputation',
+      getIcon: () => 'star',
+      onClick: () => void this.App.investigateReputation(),
+      isDisabled: () => !this.App.isGameActive() || this.App.isAutoplayActive(),
     },
     {
       icon: 'auto_mode',
       getLabel: () =>
-        this.App.isAutoplay() ? 'Stop Autoplay' : 'Start Autoplay',
-      getIcon: () => (this.App.isAutoplay() ? 'stop' : 'auto_mode'),
+        this.App.isAutoplayActive() ? 'Stop Autoplay' : 'Start Autoplay',
+      getIcon: () => (this.App.isAutoplayActive() ? 'stop' : 'auto_mode'),
       onClick: () => void this.App.toggleAutoplay(),
-      isDisabled: () => !this.App.Task.entities().length,
+      isDisabled: () => !this.App.isGameActive(),
     },
     {
       icon: 'dark_mode',
