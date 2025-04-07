@@ -1,6 +1,6 @@
 # Dragons of Mugloar
 
-A strategic browser game implementation of the [Dragons of Mugloar](https://www.dragonsofmugloar.com/) challenge, using Angular 19.1 with Material UI and NgRx Signals.
+A strategic browser game implementation of the [Dragons of Mugloar](https://www.dragonsofmugloar.com/) challenge, using Angular 19 with Material UI and NgRx Signals.
 
 ## Quick Start
 
