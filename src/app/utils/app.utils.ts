@@ -48,6 +48,6 @@ export function decryptRot13(str: string) {
 
 export function includesAny(targetString: string, searchStrings: string[]) {
   return searchStrings.some((searchString) =>
-    targetString.toLowerCase().includes(searchString),
+    targetString.toLowerCase().includes(searchString.toLowerCase()),
   );
 }
