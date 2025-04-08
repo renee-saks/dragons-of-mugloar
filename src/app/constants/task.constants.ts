@@ -13,7 +13,7 @@ export const taskProbabilities = {
 };
 
 export const taskMessagePhrases = {
-  positive: ['create', 'escort', 'help', 'share'],
+  positive: ['create', 'escort', 'help', 'share', 'rescue'],
   negative: ['kill', 'steal'],
   neutral: ['help defending'],
   trap: ['super awesome diamond'],

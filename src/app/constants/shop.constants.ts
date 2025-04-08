@@ -3,7 +3,7 @@ import { MatDialogConfig } from '@angular/material/dialog';
 export const shopItemImpacts = {
   hpot: { lives: 1, levels: 0 },
   cs: { lives: 0, levels: 1 },
-  gas: { lives: 1, levels: 0 },
+  gas: { lives: 0, levels: 1 },
   wax: { lives: 0, levels: 1 },
   tricks: { lives: 0, levels: 1 },
   wingpot: { lives: 0, levels: 1 },

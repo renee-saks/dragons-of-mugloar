@@ -15,8 +15,14 @@ import {
   withState,
 } from '@ngrx/signals';
 
-import { imagePaths, initialAppState, taskProbabilities } from '../constants';
-import { ColorMode, ShopItemId } from '../models';
+import {
+  imagePaths,
+  initialAppState,
+  taskMessagePhrases,
+  taskProbabilities,
+} from '../constants';
+import { ColorMode } from '../models';
+import { includesAny } from '../utils';
 import { GameStore } from './game.store';
 import { ReputationStore } from './reputation.store';
 import { ShopHistoryStore } from './shop-history.store';
@@ -62,45 +68,53 @@ export const AppStore = signalStore(
         !!App.TaskHistory.entities().length ||
         !!App.ShopHistory.entities().length,
     ),
-    _autoplayShopItems: computed(() => {
-      const potId: ShopItemId = 'hpot';
-      const csId: ShopItemId = 'cs';
+    suggestShopItems: computed(() => {
+      const gold = App.Game.gold();
+      const lives = App.Game.lives();
 
-      // Check health potions first
-      const potionCost = App.Shop.entityMap()[potId]?.cost ?? Infinity;
-      const potionsNeeded = Math.max(0, 5 - App.Game.lives());
-      const affordablePotions = Math.floor(App.Game.gold() / potionCost);
-      const potionsToBuy = Math.min(potionsNeeded, affordablePotions);
-
-      if (potionsToBuy > 0) {
-        return Array<string>(potionsToBuy).fill(potId);
+      if (gold < 50) {
+        return [];
       }
 
-      // If no potions needed, try to buy level up items
-      const csCost = App.Shop.entityMap()[csId]?.cost ?? Infinity;
-      const affordableCs = Math.floor(App.Game.gold() / csCost);
-
-      if (affordableCs > 0) {
-        return Array<string>(affordableCs).fill(csId);
+      if (lives < 2) {
+        return ['hpot'];
       }
 
-      return [];
+      if (gold < 100) {
+        return [];
+      }
+
+      const items = App.Shop.entities();
+      const filtered = items.filter(({ id }) => id !== 'hpot');
+      const grouped = Object.groupBy(filtered, ({ cost }) => cost);
+
+      const sorted = Object.entries(grouped)
+        .sort(([costA], [costB]) => {
+          const costAValue = parseInt(costA, 10);
+          const costBValue = parseInt(costB, 10);
+          return costBValue - costAValue;
+        })
+        .filter(([cost]) => parseInt(cost, 10) <= gold)
+        .map(([, items]) => items)
+        .flat();
+
+      const randomItem = sorted[Math.floor(Math.random() * sorted.length)];
+
+      return randomItem ? [randomItem.id] : [];
     }),
-    _autoplayTask: computed(() => {
-      const tasks = App.Task.entities();
-
-      if (!tasks.length) {
-        return null;
-      }
-
-      return tasks.reduce((previous, current) => {
-        const currentProbability = taskProbabilities[current.probability];
-        const previousProbability = taskProbabilities[previous.probability];
-        const currentRatio = currentProbability * current.reward;
-        const previousRatio = previousProbability * previous.reward;
-
-        return previousRatio < currentRatio ? current : previous;
+    suggestTask: computed(() => {
+      const sorted = App.Task.entities().sort((a, b) => {
+        const aScore = a.reward * taskProbabilities[a.probability];
+        const bScore = b.reward * taskProbabilities[b.probability];
+        return bScore - aScore;
       });
+
+      const preferred = sorted.filter(({ message }) => {
+        const { negative, trap } = taskMessagePhrases;
+        return !includesAny(message, [...negative, ...trap]);
+      });
+
+      return preferred.length ? preferred[0] : sorted[0];
     }),
   })),
   withMethods((App) => ({
@@ -146,9 +160,9 @@ export const AppStore = signalStore(
         patchState(App, { isAutoplayActive: true });
 
         while (App.isGameActive() && App.isAutoplayActive()) {
-          await this.purchaseShopItems(App._autoplayShopItems());
+          await this.purchaseShopItems(App.suggestShopItems());
 
-          const task = App._autoplayTask();
+          const task = App.suggestTask();
           if (task) {
             await this.solveTask(task.adId);
           } else {
